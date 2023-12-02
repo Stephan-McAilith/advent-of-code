@@ -29,6 +29,7 @@ main = do
 processLine :: [Char] -> Int
 processLine str = getFirstDigit str* 10 +  getLastDigit str
 
+getFirstDigit :: [Char] -> Int
 getFirstDigit str = getFirstDigit' str []
   where
     getFirstDigit' str [] = getFirstDigit' (tail str) (dropWhile (\digit -> not (digit `isPrefixOf` str)) digitNames)
