@@ -19,12 +19,22 @@ process input = let [rules, updates] = splitOn "\n\n" input
                 in foldr ((+) . checkValidity (parseRules rules) ) 0 (parseUpdates updates)
 
 checkValidity::RulesMap->[Int]->Int
-checkValidity rules update = if checkValidity' update [] then update !! (length update `div` 2) else 0
+checkValidity rules update = if checkValidity' update [] then 0 else computeFixUpdate rules update
   where
     checkValidity' [] _ = True
     checkValidity' (x:xs) banList
       | x `elem` banList = False
       | otherwise = checkValidity' xs $ banList ++ Map.findWithDefault [] x rules
+
+computeFixUpdate::RulesMap->[Int]->Int
+computeFixUpdate rules update = let fixedUpdate  = computeFixUpdate' update [] in fixedUpdate !! (length fixedUpdate `div` 2)
+  where
+    computeFixUpdate'::[Int]->[Int]->[Int]
+    computeFixUpdate' [] fixed = fixed
+    computeFixUpdate' (x:xs) fixed = computeFixUpdate' xs (insertInUpdate (Map.findWithDefault [] x rules) x fixed)
+    insertInUpdate banList v fixed = let bads = filter (`elem` banList) fixed in
+      if (null bads) then v:fixed else 
+        dropWhileEnd (/= last bads) fixed ++ [v] ++ takeWhileEnd ((/= last bads)) fixed
 
 parseUpdates::String->[[Int]]
 parseUpdates input = map ((map read) . (splitOn ",")) (lines input)
