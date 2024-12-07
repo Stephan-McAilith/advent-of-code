@@ -18,7 +18,7 @@ processLine::String->Int
 processLine input = let (goal, operands) = parseLine input in if findOperators goal operands then goal else 0
 
 findOperators::Int->[Int]->Bool
-findOperators goal operands = findOperators' goal operands 0
+findOperators goal (operand:operands) = findOperators' goal operands operand
   where
     findOperators' goal [] current = goal == current
     findOperators' goal (op:ops) current
