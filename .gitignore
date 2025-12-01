@@ -3,3 +3,6 @@
 *.o
 dist*
 CHANGELOG.md
+x64
+.vs
+*.vcxproj.user
