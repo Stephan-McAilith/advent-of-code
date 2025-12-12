@@ -6,3 +6,5 @@ CHANGELOG.md
 x64
 .vs
 *.vcxproj.user
+Release
+Debug
